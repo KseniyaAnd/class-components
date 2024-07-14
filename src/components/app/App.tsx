@@ -1,58 +1,39 @@
-import {Component} from 'react';
-import ApiService from '../apiService/ApiService.tsx';
-import ResultsComponent from "../resultsComponent/ResultsComponent.tsx";
-import SearchComponent from "../searchComponent/SearchComponent.tsx";
-import ErrorBoundary from "../errorBoundary/ErrorBoundary.tsx";
+import React, { useState } from 'react';
+import ApiService from './ApiService';
+import ResultsComponent from './ResultsComponent';
+import SearchComponent from './SearchComponent';
+import ErrorBoundary from './ErrorBoundary';
 
-interface AppState {
-    results: Array<{ name: string; description: string }>;
-    searchTerm: string,
-    loading: boolean;
-}
+const App: React.FC = () => {
+    const [results, setResults] = useState<Array<{ name: string; description: string }>>([]);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
-class App extends Component<{}, AppState> {
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            results: [],
-            searchTerm: '',
-            loading: false,
-        };
-    }
-
-    handleSearch = (term: string) => {
-        this.setState({searchTerm: term});
+    const handleSearch = (term: string) => {
+        setSearchTerm(term);
     };
 
-    handleResults = (results: Array<{ name: string; description: string }>) => {
-        this.setState({results});
+    const handleResults = (results: Array<{ name: string; description: string }>) => {
+        setResults(results);
     };
 
-    handleLoading = (isLoading: boolean) => {
-        this.setState({loading: isLoading});
+    const handleLoading = (isLoading: boolean) => {
+        setLoading(isLoading);
     };
 
-    render() {
-        const {results, searchTerm, loading} = this.state;
-
-        return (
-            <ErrorBoundary>
-                <div>
-                    <div style={{padding: '10px', borderBottom: '1px solid #ddd'}}>
-                        <SearchComponent onSearch={this.handleSearch}/>
-                    </div>
-                    <div style={{padding: '10px'}}>
-                        {loading ? <p>Loading...</p> : <ResultsComponent results={results}/>}
-                    </div>
-                    <ApiService
-                        searchTerm={searchTerm}
-                        onResults={this.handleResults}
-                        onLoading={this.handleLoading}
-                    />
-                </div>
-            </ErrorBoundary>
-        );
-    }
-}
+    return (
+      <ErrorBoundary>
+          <div>
+              <div style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
+                  <SearchComponent onSearch={handleSearch} />
+              </div>
+              <div style={{ padding: '10px' }}>
+                  {loading ? <p>Loading...</p> : <ResultsComponent results={results} />}
+              </div>
+              <ApiService searchTerm={searchTerm} onResults={handleResults} onLoading={handleLoading} />
+          </div>
+      </ErrorBoundary>
+    );
+};
 
 export default App;

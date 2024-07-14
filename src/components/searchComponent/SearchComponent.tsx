@@ -1,46 +1,33 @@
-import React, {Component, ChangeEvent} from 'react';
+import React, { ChangeEvent } from 'react';
+import useLocalStorage from './useLocalStorage';
 
 interface SearchComponentProps {
     onSearch: (term: string) => void;
 }
 
-interface SearchComponentState {
-    searchTerm: string;
-}
+const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch }) => {
+    const [searchTerm, setSearchTerm] = useLocalStorage('searchTerm', '');
 
-class SearchComponent extends Component<SearchComponentProps, SearchComponentState> {
-    constructor(props: SearchComponentProps) {
-        super(props);
-        const savedTerm = localStorage.getItem('searchTerm') || '';
-        this.state = {
-            searchTerm: savedTerm,
-        };
-    }
-
-    handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        this.setState({searchTerm: event.target.value});
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
     };
 
-    handleSearch = () => {
-        const {searchTerm} = this.state;
+    const handleSearch = () => {
         const trimmedTerm = searchTerm.trim();
-        this.props.onSearch(trimmedTerm);
-        localStorage.setItem('searchTerm', trimmedTerm);
+        onSearch(trimmedTerm);
     };
 
-    render() {
-        return (
-            <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
-                <input
-                    type="text"
-                    style={{padding: "0.6em 0.5em"}}
-                    value={this.state.searchTerm}
-                    onChange={this.handleChange}
-                />
-                <button onClick={this.handleSearch}>Search</button>
-            </div>
-        );
-    }
-}
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <input
+            type="text"
+            style={{ padding: '0.6em 0.5em' }}
+            value={searchTerm}
+            onChange={handleChange}
+          />
+          <button onClick={handleSearch}>Search</button>
+      </div>
+    );
+};
 
 export default SearchComponent;

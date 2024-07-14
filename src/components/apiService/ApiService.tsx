@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useEffect } from 'react';
 
 interface StarWarsPerson {
   name: string;
@@ -11,42 +11,34 @@ interface StarWarsPerson {
 interface ApiServiceProps {
   searchTerm: string;
   onResults: (results: Array<{ name: string; description: string }>) => void;
+  onLoading: (isLoading: boolean) => void;
 }
 
-class ApiService extends Component<ApiServiceProps, {}> {
-  componentDidUpdate(prevProps: ApiServiceProps) {
-    if (prevProps.searchTerm !== this.props.searchTerm) {
-      this.fetchData(this.props.searchTerm);
-    }
-  }
-
-  componentDidMount() {
-    this.fetchData(this.props.searchTerm);
-  }
-
-  fetchData = (term: string) => {
-    const { onResults, onLoading } = this.props;
-    onLoading(true);
-
-    fetch(`https://swapi.dev/api/people/?search=${term}`)
-      .then(response => response.json())
-      .then(data => {
+const ApiService: React.FC<ApiServiceProps> = ({ searchTerm, onResults, onLoading }) => {
+  useEffect(() => {
+    const fetchData = async (term: string) => {
+      onLoading(true);
+      try {
+        const response = await fetch(`https://swapi.dev/api/people/?search=${term}`);
+        const data = await response.json();
         const results = data.results.map((item: StarWarsPerson) => ({
           name: item.name,
           description: `Height: ${item.height}, Mass: ${item.mass}, Birth year: ${item.birth_year}, Gender: ${item.gender}`,
         }));
         onResults(results);
-        onLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
         onLoading(false);
-      });
-  };
+      }
+    };
 
-  render() {
-    return null;
-  }
-}
+    if (searchTerm) {
+      fetchData(searchTerm);
+    }
+  }, [searchTerm, onResults, onLoading]);
+
+  return null;
+};
 
 export default ApiService;
