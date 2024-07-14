@@ -16,26 +16,29 @@ interface ApiServiceProps {
 
 const ApiService: React.FC<ApiServiceProps> = ({ searchTerm, onResults, onLoading }) => {
   useEffect(() => {
-    const fetchData = async (term: string) => {
+    const fetchData = (term: string) => {
       onLoading(true);
-      try {
-        const response = await fetch(`https://swapi.dev/api/people/?search=${term}`);
-        const data = await response.json();
-        const results = data.results.map((item: StarWarsPerson) => ({
-          name: item.name,
-          description: `Height: ${item.height}, Mass: ${item.mass}, Birth year: ${item.birth_year}, Gender: ${item.gender}`,
-        }));
-        onResults(results);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        onLoading(false);
-      }
+      const url = term
+        ? `https://swapi.dev/api/people/?search=${term}`
+        : `https://swapi.dev/api/people/`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const results = data.results.map((item: StarWarsPerson) => ({
+            name: item.name,
+            description: `Height: ${item.height}, Mass: ${item.mass}, Birth year: ${item.birth_year}, Gender: ${item.gender}`,
+          }));
+          onResults(results);
+          onLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          onLoading(false);
+        });
     };
 
-    if (searchTerm) {
-      fetchData(searchTerm);
-    }
+    fetchData(searchTerm);
   }, [searchTerm, onResults, onLoading]);
 
   return null;
