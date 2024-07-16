@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setResults, setLoading } from '../reducers/SearchSlice';
 
 interface StarWarsPerson {
   name: string;
@@ -8,39 +10,41 @@ interface StarWarsPerson {
   gender: string;
 }
 
-interface ApiServiceProps {
-  searchTerm: string;
-  onResults: (results: Array<{ name: string; description: string }>) => void;
-  onLoading: (isLoading: boolean) => void;
-}
+const ApiService: React.FC<{ searchTerm: string }> = ({ searchTerm }) => {
+  const dispatch = useDispatch();
 
-const ApiService: React.FC<ApiServiceProps> = ({ searchTerm, onResults, onLoading }) => {
+  const fetchData = async (term: string | null) => {
+    const url = term
+      ? `https://swapi.dev/api/people/?search=${term}`
+      : 'https://swapi.dev/api/people/';
+
+    try {
+      dispatch(setLoading(true));
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+
+      const results = data.results.map((item: StarWarsPerson) => ({
+        name: item.name,
+        description: `Height: ${item.height}, Mass: ${item.mass}, Birth year: ${item.birth_year}, Gender: ${item.gender}`,
+      }));
+
+      dispatch(setResults(results));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   useEffect(() => {
-    const fetchData = (term: string) => {
-      onLoading(true);
-      const url = term
-        ? `https://swapi.dev/api/people/?search=${term}`
-        : `https://swapi.dev/api/people/`;
+    fetchData(searchTerm); // Always fetch data based on the current searchTerm
+  }, [searchTerm, dispatch]);
 
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const results = data.results.map((item: StarWarsPerson) => ({
-            name: item.name,
-            description: `Height: ${item.height}, Mass: ${item.mass}, Birth year: ${item.birth_year}, Gender: ${item.gender}`,
-          }));
-          onResults(results);
-          onLoading(false);
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-          onLoading(false);
-        });
-    };
-
-    fetchData(searchTerm);
-  }, [searchTerm, onResults, onLoading]);
-
+  // No need to return anything from this component
   return null;
 };
 

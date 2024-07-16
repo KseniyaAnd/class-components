@@ -1,25 +1,24 @@
-import React, { ChangeEvent, useEffect } from 'react';
-import useLocalStorage from '../../hooks/useLocalStorage';
+import React, { ChangeEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../store/Store.tsx';
+import { setSearchTerm } from '../reducers/SearchSlice.tsx';
 
 interface SearchComponentProps {
   onSearch: (term: string) => void;
 }
 
 const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch }) => {
-  const [searchTerm, setSearchTerm] = useLocalStorage();
+  const dispatch = useDispatch<AppDispatch>();
+  const searchTerm = useSelector((state: RootState) => state.search.searchTerm);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    dispatch(setSearchTerm(event.target.value));
   };
 
   const handleSearch = () => {
     const trimmedTerm = searchTerm.trim();
     onSearch(trimmedTerm);
   };
-
-  useEffect(() => {
-    handleSearch();
-  }, []);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
