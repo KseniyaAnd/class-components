@@ -5,7 +5,9 @@ import { setSearchTerm, setResults, setLoading } from '../reducers/SearchSlice';
 import ResultsComponent from '../resultsComponent/ResultsComponent';
 import SearchComponent from '../searchComponent/SearchComponent';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
-import { useGetPeopleQuery } from '../services/ApiService'; // Import the hook
+import { useGetPeopleQuery } from '../services/ApiService';
+import { useTheme } from '../contexts/ThemeContext'; // Import useTheme hook
+import './SearchHero.css'; // Example CSS file for styling
 
 interface StarWarsPerson {
   name: string;
@@ -20,12 +22,12 @@ const SearchHero: React.FC = () => {
   const searchTerm = useSelector((state: RootState) => state.search.searchTerm);
   const loading = useSelector((state: RootState) => state.search.loading);
   const results = useSelector((state: RootState) => state.search.results);
+  const { theme, toggleTheme } = useTheme(); // Use theme context
 
-  const [searchClicked, setSearchClicked] = useState(false); // State to track if search button is clicked
+  const [searchClicked, setSearchClicked] = useState(false);
 
-  // Fetch data using useGetPeopleQuery hook
   const { data: peopleData, isLoading, isError } = useGetPeopleQuery(searchTerm, {
-    enabled: searchClicked && searchTerm.trim() !== '', // Fetch data only when searchClicked is true and searchTerm is not empty
+    enabled: searchClicked && searchTerm.trim() !== '',
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
@@ -43,13 +45,13 @@ const SearchHero: React.FC = () => {
 
   const handleSearch = (term: string) => {
     dispatch(setSearchTerm(term));
-    dispatch(setLoading(true)); // Start loading indicator
-    setSearchClicked(true); // Set searchClicked to true on search button click
+    dispatch(setLoading(true));
+    setSearchClicked(true);
   };
 
   useEffect(() => {
     if (!isLoading) {
-      dispatch(setLoading(false)); // Turn off loading indicator when data fetching is complete
+      dispatch(setLoading(false));
       if (peopleData?.results) {
         const mappedResults = peopleData.results.map((person: StarWarsPerson) => ({
           name: person.name,
@@ -62,9 +64,10 @@ const SearchHero: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <div>
-        <div style={{ padding: '10px', borderBottom: '1px solid #ddd' }}>
+      <div className={`search-hero ${theme === 'dark' ? 'dark-theme' : 'light-theme'}`}>
+        <div style={{ padding: '10px', borderBottom: '1px solid #ddd', display: 'flex', gap: 5 }}>
           <SearchComponent onSearch={handleSearch} />
+          <button onClick={toggleTheme}>Toggle Theme</button>
         </div>
         <div style={{ padding: '10px' }}>
           {loading ? (
@@ -73,13 +76,12 @@ const SearchHero: React.FC = () => {
             <ResultsComponent results={searchClicked ? results : results} />
           )}
         </div>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : isError ? (
+          <p>Error fetching data.</p>
+        ) : null}
       </div>
-      {/* Render fetched data */}
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : isError ? (
-        <p>Error fetching data.</p>
-      ) : null}
     </ErrorBoundary>
   );
 };
