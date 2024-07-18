@@ -11,12 +11,16 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({ results }) => {
   const dispatch = useDispatch();
   const selectedItems = useSelector((state: RootState) => state.search.selectedItems);
 
-  const handleSelect = (name: string) => {
-    if (selectedItems.includes(name)) {
-      dispatch(unselectItem(name));
+  const handleSelect = (item: { name: string; description: string }) => {
+    if (isSelected(item)) {
+      dispatch(unselectItem(item.name));
     } else {
-      dispatch(selectItem(name));
+      dispatch(selectItem(item));
     }
+  };
+
+  const isSelected = (item: { name: string; description: string }) => {
+    return selectedItems.some(selected => selected.name === item.name);
   };
 
   return (
@@ -25,8 +29,8 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({ results }) => {
         <div key={index}>
           <input
             type="checkbox"
-            checked={selectedItems.includes(result.name)}
-            onChange={() => handleSelect(result.name)}
+            checked={isSelected(result)}
+            onChange={() => handleSelect(result)}
           />
           <h3>{result.name}</h3>
           <p>{result.description}</p>

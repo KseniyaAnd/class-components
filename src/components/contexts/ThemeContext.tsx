@@ -1,3 +1,4 @@
+// ThemeContext.tsx
 import React, { createContext, useContext, useState } from 'react';
 
 export type Theme = 'light' | 'dark';
@@ -18,7 +19,7 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider: React.FC = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light'); // Default theme is 'light'
+  const [theme, setTheme] = useState<Theme>('light'); // Тема по умолчанию - 'light'
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');

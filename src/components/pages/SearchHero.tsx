@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { setSearchTerm, setResults, setLoading } from '../reducers/SearchSlice';
@@ -7,6 +7,7 @@ import SearchComponent from '../searchComponent/SearchComponent';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 import { useGetPeopleQuery } from '../services/ApiService';
 import { useTheme } from '../contexts/ThemeContext';
+import SelectedItemsFlyout from '../selectedItemsFlyout/SelectedItemsFlyout'; // Import SelectedItemsFlyout
 import './SearchHero.css';
 
 interface StarWarsPerson {
@@ -23,8 +24,9 @@ const SearchHero: React.FC = () => {
   const loading = useSelector((state: RootState) => state.search.loading);
   const results = useSelector((state: RootState) => state.search.results);
   const { theme, toggleTheme } = useTheme();
+  const selectedItems = useSelector((state: RootState) => state.search.selectedItems);
 
-  const [searchClicked, setSearchClicked] = useState(false);
+  const [searchClicked, setSearchClicked] = React.useState(false);
 
   const { data: peopleData, isLoading, isError } = useGetPeopleQuery(searchTerm, {
     enabled: searchClicked && searchTerm.trim() !== '',
@@ -32,14 +34,14 @@ const SearchHero: React.FC = () => {
     refetchOnReconnect: true,
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     const savedSearchTerm = localStorage.getItem('searchTerm');
     if (savedSearchTerm) {
       dispatch(setSearchTerm(savedSearchTerm));
     }
   }, [dispatch]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     localStorage.setItem('searchTerm', searchTerm);
   }, [searchTerm]);
 
@@ -49,7 +51,7 @@ const SearchHero: React.FC = () => {
     setSearchClicked(true);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isLoading) {
       dispatch(setLoading(false));
       if (peopleData?.results) {
@@ -76,6 +78,7 @@ const SearchHero: React.FC = () => {
             <ResultsComponent results={searchClicked ? results : results} />
           )}
         </div>
+        {selectedItems.length > 0 && <SelectedItemsFlyout />}
         {isLoading ? (
           <p>Loading...</p>
         ) : isError ? (
