@@ -9,6 +9,7 @@ const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(ApiService.middleware),
+  devTools: process.env.NODE_ENV !== 'production', // Enable Redux DevTools in development
 });
 
 export type RootState = ReturnType<typeof store.getState>;

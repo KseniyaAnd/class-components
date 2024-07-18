@@ -6,8 +6,8 @@ import ResultsComponent from '../resultsComponent/ResultsComponent';
 import SearchComponent from '../searchComponent/SearchComponent';
 import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 import { useGetPeopleQuery } from '../services/ApiService';
-import { useTheme } from '../contexts/ThemeContext'; // Import useTheme hook
-import './SearchHero.css'; // Example CSS file for styling
+import { useTheme } from '../contexts/ThemeContext';
+import './SearchHero.css';
 
 interface StarWarsPerson {
   name: string;
@@ -22,7 +22,7 @@ const SearchHero: React.FC = () => {
   const searchTerm = useSelector((state: RootState) => state.search.searchTerm);
   const loading = useSelector((state: RootState) => state.search.loading);
   const results = useSelector((state: RootState) => state.search.results);
-  const { theme, toggleTheme } = useTheme(); // Use theme context
+  const { theme, toggleTheme } = useTheme();
 
   const [searchClicked, setSearchClicked] = useState(false);
 
