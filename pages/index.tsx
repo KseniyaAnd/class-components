@@ -1,14 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { setSearchTerm, setResults, setLoading } from '../reducers/SearchSlice';
-import ResultsComponent from '../resultsComponent/ResultsComponent';
-import SearchComponent from '../searchComponent/SearchComponent';
-import ErrorBoundary from '../errorBoundary/ErrorBoundary';
-import { useGetPeopleQuery } from '../services/ApiService';
-import { useTheme } from '../contexts/ThemeContext';
-import SelectedItemsFlyout from '../selectedItemsFlyout/SelectedItemsFlyout'; // Import SelectedItemsFlyout
-import './SearchHero.css';
+import { setSearchTerm, setResults, setLoading } from '../src/component/reducers/SearchSlice';
+import ResultsComponent from '../src/component/resultsComponent/ResultsComponent';
+import SearchComponent from '../src/component/searchComponent/SearchComponent';
+import ErrorBoundary from '../src/component/errorBoundary/ErrorBoundary';
+import { useGetPeopleQuery } from '../src/component/services/ApiService';
+import { useTheme } from '../src/component/contexts/ThemeContext';
+import SelectedItemsFlyout from '../src/component/selectedItemsFlyout/SelectedItemsFlyout'; // Import SelectedItemsFlyout
 
 interface StarWarsPerson {
   name: string;
@@ -18,7 +17,7 @@ interface StarWarsPerson {
   gender: string;
 }
 
-const SearchHero: React.FC = () => {
+const Index: React.FC = () => {
   const dispatch = useDispatch();
   const searchTerm = useSelector((state: RootState) => state.search.searchTerm);
   const loading = useSelector((state: RootState) => state.search.loading);
@@ -89,4 +88,4 @@ const SearchHero: React.FC = () => {
   );
 };
 
-export default SearchHero;
+export default Index;

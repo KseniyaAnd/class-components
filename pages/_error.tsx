@@ -1,6 +1,6 @@
 import React from 'react';
 
-const NotFound: React.FC = () => {
+const _error: React.FC = () => {
   return (
     <div>
       <h2>404 - Not Found</h2>
@@ -9,4 +9,4 @@ const NotFound: React.FC = () => {
   );
 };
 
-export default NotFound;
+export default _error;
