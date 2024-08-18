@@ -106,14 +106,14 @@ function UncontrolledFormPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div id="uncontrolled-from-page">
-        <h1>Uncontrolled From</h1>
+    <form onSubmit={handleSubmit} id="uncontrolled-from-page">
+      <h1>Uncontrolled From</h1>
+      <div>
         <label htmlFor="name">Name:</label>
         <input type="text" id="name" ref={nameRef} />
       </div>
       <div>
-      <label htmlFor="age">Age:</label>
+        <label htmlFor="age">Age:</label>
         <input type="number" id="age" ref={ageRef} />
       </div>
       <div>

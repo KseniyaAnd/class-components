@@ -65,8 +65,9 @@ function HookFormPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div id="hook-from-page">
+    <form onSubmit={handleSubmit(onSubmit)} id="hook-from-page">
+      <h1>Hook From</h1>
+      <div>
         <label htmlFor="name">Name:</label>
         <input {...register('name')} />
         <p>{errors.name?.message}</p>
