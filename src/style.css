@@ -1,0 +1,107 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #696969;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #dedede;
+    font-family: "Lucida Console";
+}
+
+#root {
+    background-color: #424242;
+    padding: 70px;
+    border-radius: 40px;
+    display: flex;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+#root #main-page {
+    font-size: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+
+#root #main-page ul {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    list-style-type: none;
+}
+
+#root #main-page ul
+a:active,
+a:hover,
+a {
+    text-decoration: none;
+    color: #666;
+}
+
+#root #main-page ul a:hover {
+    text-decoration: none;
+    color: #adadad;
+}
+
+#root form {
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#root form h1 {
+    display: flex;
+    justify-content: center;
+}
+
+#root form div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#root form input, select, [type=checkbox] {
+    font-size: 20px;
+    padding: 6px 5px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+#root form [type=checkbox] {
+    width: 24px;
+    height: 24px;
+}
+
+#root form p {
+    font-size: 16px;
+    width: 380px;
+    color: red;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#root #errors ul {
+    font-size: 16px;
+    width: 380px;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#root form button {
+    font-size: 16px;
+    width: fit-content;
+    padding: 10px 40px;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
